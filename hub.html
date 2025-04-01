@@ -5,91 +5,129 @@
     <title>Garten Sharing Hub</title>
     <style>
         body {
-            background-color: black;
-            color: white;
-            font-family: Arial, sans-serif;
+            background-color: white;
+            color: #1E90FF;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
             display: flex;
             justify-content: space-around;
             align-items: center;
             height: 100vh;
+            padding: 0 50px;
+            box-sizing: border-box;
         }
-        .column {
-            width: 40%;
+
+        .column, .table-container, .button-container {
+            display: inline-block;
+            vertical-align: top;
+            margin: 10px;
         }
+
         input, button {
             margin: 5px;
             padding: 10px;
-            font-size: 16px;
+            font-size: 18px;
             background-color: white;
-            color: black;
-            border: none;
+            color: #1E90FF;
+            border: 2px solid #1E90FF;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
         }
+
+        button:hover {
+            animation: pulse 0.6s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
         table {
             width: 100%;
-            color: white;
-            margin-top: 20px;
+            border-collapse: collapse;
+            margin-top: 10px;
+            color: #1E90FF;
+            font-size: 16px;
         }
-        td, th {
+
+        th, td {
             padding: 8px;
-            border: 1px solid white;
+            border: 1px solid #1E90FF;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f0f8ff;
+        }
+
+        .update-button, .have-button {
+            background-color: #1E90FF;
+            color: white;
+            border-radius: 15px;
+            font-size: 20px;
+            padding: 12px 24px;
+        }
+
+        #deviceTable {
+            display: none;
         }
     </style>
 </head>
 <body>
     <div class="column">
         <h2>Ich suche...</h2>
-        <input type="text" id="search" placeholder="Gerät suchen" oninput="searchDevice()">
-        <div id="searchResult"></div>
+        <input type="text" id="search" placeholder="Gerätename">
     </div>
 
-    <button onclick="updateDevices()">Meine Geräte aktualisieren</button>
+    <div class="button-container">
+        <button class="have-button" onclick="toggleTable()">Ich habe...</button>
+        <div id="deviceTable">
+            <table>
+                <tr>
+                    <th>1. Gerätname</th>
+                    <th>2. Modell</th>
+                    <th>3. Adresse</th>
+                    <th>4. E-Mail</th>
+                    <th>5. WhatsApp</th>
+                    <th>6. Telefon</th>
+                    <th>7. Besitzer</th>
+                </tr>
+                <tr>
+                    <td>Rasenmäher</td>
+                    <td>Honda GX200</td>
+                    <td>Eibenweg 5</td>
+                    <td>beispiel@web.de</td>
+                    <td>+49 123 456 789</td>
+                    <td>+49 987 654 321</td>
+                    <td>Katrin</td>
+                </tr>
+                <tr>
+                    <td>Heckenschere</td>
+                    <td>Stihl HS 45</td>
+                    <td>Eibenweg 7</td>
+                    <td>garten@web.de</td>
+                    <td>+49 111 222 333</td>
+                    <td>+49 444 555 666</td>
+                    <td>Hans</td>
+                </tr>
+            </table>
+        </div>
+    </div>
 
-    <div class="column">
-        <h2>Ich habe...</h2>
-        <input type="text" id="newDevice" placeholder="Neues Gerät hinzufügen">
-        <button onclick="addDevice()">Hinzufügen</button>
-        <div id="deviceList"></div>
+    <div class="button-container">
+        <button class="update-button">Meine Geräte aktualisieren</button>
     </div>
 
     <script>
-        let deviceList = [];
-
-        function searchDevice() {
-            let searchValue = document.getElementById("search").value.toLowerCase();
-            let result = deviceList.filter(device => device.name.toLowerCase().includes(searchValue));
-            displaySearchResults(result);
-        }
-
-        function addDevice() {
-            let deviceName = document.getElementById("newDevice").value;
-            if (deviceName) {
-                deviceList.push({name: deviceName, address: "Eibenweg 5", contact: "keine Angabe"});
-                alert("Gerät hinzugefügt!");
-                displayDeviceList();
+        function toggleTable() {
+            var table = document.getElementById("deviceTable");
+            if (table.style.display === "none") {
+                table.style.display = "block";
+            } else {
+                table.style.display = "none";
             }
-        }
-
-        function displaySearchResults(results) {
-            let output = "<table><tr><th>Gerät</th><th>Adresse</th><th>Kontakt</th></tr>";
-            results.forEach(device => {
-                output += `<tr><td>${device.name}</td><td>${device.address}</td><td>${device.contact}</td></tr>`;
-            });
-            output += "</table>";
-            document.getElementById("searchResult").innerHTML = output;
-        }
-
-        function displayDeviceList() {
-            let output = "<table><tr><th>Gerät</th><th>Adresse</th><th>Kontakt</th></tr>";
-            deviceList.forEach(device => {
-                output += `<tr><td>${device.name}</td><td>${device.address}</td><td>${device.contact}</td></tr>`;
-            });
-            output += "</table>";
-            document.getElementById("deviceList").innerHTML = output;
-        }
-
-        function updateDevices() {
-            alert("Geräteliste aktualisiert!");
-            displayDeviceList();
         }
     </script>
 </body>
