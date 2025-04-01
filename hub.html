@@ -81,6 +81,10 @@
             padding: 12px 24px;
         }
 
+        .error {
+            border: 2px solid red;
+        }
+
         #deviceTable {
             display: none;
         }
@@ -112,15 +116,10 @@
                     <th>6. Telefon</th>
                     <th>7. Besitzer</th>
                 </tr>
-                <!-- Fünf leere Zeilen -->
                 <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
             </table>
             <button class="save-button" onclick="saveDevices()">Speichern</button>
         </div>
-    </div>
-
-    <div class="button-container">
-        <button class="update-button">Meine Geräte aktualisieren</button>
     </div>
 
     <script>
@@ -133,18 +132,35 @@
 
         function saveDevices() {
             const rows = document.querySelectorAll("#deviceList tr");
+            let isValid = true;
+
             rows.forEach((row, index) => {
-                if (index > 0) { // Ignoriere die Kopfzeile
+                if (index > 0) {
                     const inputs = row.querySelectorAll("input");
                     let device = {};
+
                     inputs.forEach((input, colIndex) => {
-                        device[`col${colIndex+1}`] = input.value;
+                        const value = input.value.trim();
+                        if ((colIndex === 0 || colIndex === 2 || colIndex === 6) && value === "") {
+                            input.classList.add("error");
+                            isValid = false;
+                        } else if (colIndex === 2 && !value.includes("Eibenweg")) {
+                            alert("Du scheinst leider nicht im Eibenweg zu wohnen - kontaktiere den Seiteneingang, um dein eigenes Nachbarschaftskontor zu erstellen.");
+                            isValid = false;
+                        } else {
+                            input.classList.remove("error");
+                        }
+                        device[`col${colIndex+1}`] = value;
                     });
-                    if (device.col1) deviceData.push(device); // Speichere nur, wenn ein Geräte-Name eingegeben ist
-                    inputs.forEach(input => input.value = ""); // Leere die Felder
+
+                    if (isValid) {
+                        deviceData.push(device);
+                        inputs.forEach(input => input.value = "");
+                    }
                 }
             });
-            alert("Geräte wurden gespeichert!");
+
+            if (isValid) alert("Geräte wurden gespeichert!");
         }
 
         function searchDevice() {
@@ -156,7 +172,8 @@
         function displaySearchResults(results) {
             let output = "";
             results.forEach(device => {
-                output += `<div><strong>${device.col1}</strong>: ${device.col2}, ${device.col3}, ${device.col4}, ${device.col5}, ${device.col6}, ${device.col7}</div>`;
+                const data = Object.values(device).filter(val => val !== "").join(", ");
+                output += `<div><strong>${device.col1}</strong>: ${data}</div>`;
             });
             document.getElementById("searchResult").innerHTML = output;
         }
