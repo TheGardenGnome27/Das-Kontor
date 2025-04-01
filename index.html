@@ -35,8 +35,8 @@
     function checkPassword() {
         var password = document.getElementById("password").value;
         if (password === "Eibenweg") {
-            // Vollständige URL zur Hub-Seite
-            window.location.href = "https://thegardengnome27.github.io/Das-Kontor/hub.html";
+            // Verwende "location.assign" für die Weiterleitung
+            location.assign("https://thegardengnome27.github.io/Das-Kontor/hub.html");
         } else {
             alert("Falsches Passwort!");
         }
