@@ -154,11 +154,23 @@
             const saveBtn = document.getElementById("saveBtn");
             let allFilled = true;
 
-            requiredFields.forEach(field => {
-                if (field.value.trim() === "" || (field.placeholder === "Adresse" && !field.value.includes("Eibenweg"))) {
-                    allFilled = false;
-                }
-            });
+             requiredFields.forEach(field => {
+        // Adressprüfung
+        if (field.placeholder === "Adresse" && !field.value.includes("Eibenweg")) {
+            field.classList.add("error");
+            field.title = "Du scheinst leider nicht im Eibenweg zu wohnen - kontaktiere den Seiteneigentümer, um dein eigenes Nachbarschaftskontor zu erstellen.";
+            allFilled = false;
+        } else if (field.value.trim() === "") {
+            // Leere Pflichtfelder
+            field.classList.add("error");
+            field.title = "Dieses Feld darf nicht leer sein.";
+            allFilled = false;
+        } else {
+            // Feld korrekt ausgefüllt
+            field.classList.remove("error");
+            field.removeAttribute("title");            
+        }
+     });
 
             if (allFilled) {
                 saveBtn.disabled = false;
