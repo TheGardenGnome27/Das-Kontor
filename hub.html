@@ -73,7 +73,7 @@
             margin: 2px;
         }
 
-        .update-button, .have-button, .save-button {
+        .update-button, .have-button {
             background-color: #1E90FF;
             color: white;
             border-radius: 15px;
@@ -81,12 +81,23 @@
             padding: 12px 24px;
         }
 
-        .error {
-            border: 2px solid red;
+        .save-button {
+            background-color: lightgray;
+            color: #1E90FF;
+            border-radius: 15px;
+            font-size: 20px;
+            padding: 12px 24px;
+            cursor: not-allowed;
         }
 
-        #deviceTable {
-            display: none;
+        .save-button.active {
+            background-color: #1E90FF;
+            color: white;
+            cursor: pointer;
+        }
+
+        .required {
+            background-color: #e0f7ff;
         }
 
         .search-results {
@@ -116,9 +127,17 @@
                     <th>6. Telefon</th>
                     <th>7. Besitzer</th>
                 </tr>
-                <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+                <tr>
+                    <td><input type="text" class="required" oninput="checkRequiredFields()"></td>
+                    <td><input type="text"></td>
+                    <td><input type="text" class="required" oninput="checkRequiredFields()"></td>
+                    <td><input type="text"></td>
+                    <td><input type="text"></td>
+                    <td><input type="text"></td>
+                    <td><input type="text" class="required" oninput="checkRequiredFields()"></td>
+                </tr>
             </table>
-            <button class="save-button" onclick="saveDevices()">Speichern</button>
+            <button class="save-button" id="saveBtn" disabled onclick="saveDevices()">Speichern</button>
         </div>
     </div>
 
@@ -130,52 +149,41 @@
             table.style.display = (table.style.display === "none") ? "block" : "none";
         }
 
+        function checkRequiredFields() {
+            const requiredFields = document.querySelectorAll(".required");
+            const saveBtn = document.getElementById("saveBtn");
+            let allFilled = true;
+
+            requiredFields.forEach(field => {
+                if (field.value.trim() === "" || (field.placeholder === "Adresse" && !field.value.includes("Eibenweg"))) {
+                    allFilled = false;
+                }
+            });
+
+            if (allFilled) {
+                saveBtn.disabled = false;
+                saveBtn.classList.add("active");
+            } else {
+                saveBtn.disabled = true;
+                saveBtn.classList.remove("active");
+            }
+        }
+
         function saveDevices() {
             const rows = document.querySelectorAll("#deviceList tr");
-            let isValid = true;
-
             rows.forEach((row, index) => {
                 if (index > 0) {
                     const inputs = row.querySelectorAll("input");
                     let device = {};
-
                     inputs.forEach((input, colIndex) => {
-                        const value = input.value.trim();
-                        if ((colIndex === 0 || colIndex === 2 || colIndex === 6) && value === "") {
-                            input.classList.add("error");
-                            isValid = false;
-                        } else if (colIndex === 2 && !value.includes("Eibenweg")) {
-                            alert("Du scheinst leider nicht im Eibenweg zu wohnen - kontaktiere den Seiteneingang, um dein eigenes Nachbarschaftskontor zu erstellen.");
-                            isValid = false;
-                        } else {
-                            input.classList.remove("error");
-                        }
-                        device[`col${colIndex+1}`] = value;
+                        device[`col${colIndex+1}`] = input.value;
                     });
-
-                    if (isValid) {
-                        deviceData.push(device);
-                        inputs.forEach(input => input.value = "");
-                    }
+                    deviceData.push(device);
+                    inputs.forEach(input => input.value = "");
                 }
             });
-
-            if (isValid) alert("Geräte wurden gespeichert!");
-        }
-
-        function searchDevice() {
-            const searchValue = document.getElementById("search").value.toLowerCase();
-            const result = deviceData.filter(device => device.col1.toLowerCase().includes(searchValue));
-            displaySearchResults(result);
-        }
-
-        function displaySearchResults(results) {
-            let output = "";
-            results.forEach(device => {
-                const data = Object.values(device).filter(val => val !== "").join(", ");
-                output += `<div><strong>${device.col1}</strong>: ${data}</div>`;
-            });
-            document.getElementById("searchResult").innerHTML = output;
+            alert("Geräte wurden gespeichert!");
+            checkRequiredFields();
         }
     </script>
 </body>
