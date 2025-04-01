@@ -18,7 +18,7 @@
             box-sizing: border-box;
         }
 
-        .column, .table-container, .button-container {
+        .column, .table-container, .button-container, .search-results {
             display: inline-block;
             vertical-align: top;
             margin: 10px;
@@ -84,12 +84,19 @@
         #deviceTable {
             display: none;
         }
+
+        .search-results {
+            margin-top: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
     </style>
 </head>
 <body>
     <div class="column">
         <h2>Ich suche...</h2>
-        <input type="text" id="search" placeholder="Gerätename">
+        <input type="text" id="search" placeholder="Gerätename" oninput="searchDevice()">
+        <div id="searchResult" class="search-results"></div>
     </div>
 
     <div class="button-container">
@@ -105,20 +112,7 @@
                     <th>6. Telefon</th>
                     <th>7. Besitzer</th>
                 </tr>
-                <tr>
-                    <td>Rasenmäher</td>
-                    <td>Honda GX200</td>
-                    <td>Eibenweg 5</td>
-                    <td>beispiel@web.de</td>
-                    <td>+49 123 456 789</td>
-                    <td>+49 987 654 321</td>
-                    <td>Katrin</td>
-                </tr>
-                <!-- Leere Zeilen für Nutzereingaben -->
-                <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
-                <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
-                <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
-                <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+                <!-- Fünf leere Zeilen -->
                 <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
             </table>
             <button class="save-button" onclick="saveDevices()">Speichern</button>
@@ -130,13 +124,41 @@
     </div>
 
     <script>
+        let deviceData = [];
+
         function toggleTable() {
             var table = document.getElementById("deviceTable");
             table.style.display = (table.style.display === "none") ? "block" : "none";
         }
 
         function saveDevices() {
+            const rows = document.querySelectorAll("#deviceList tr");
+            rows.forEach((row, index) => {
+                if (index > 0) { // Ignoriere die Kopfzeile
+                    const inputs = row.querySelectorAll("input");
+                    let device = {};
+                    inputs.forEach((input, colIndex) => {
+                        device[`col${colIndex+1}`] = input.value;
+                    });
+                    if (device.col1) deviceData.push(device); // Speichere nur, wenn ein Geräte-Name eingegeben ist
+                    inputs.forEach(input => input.value = ""); // Leere die Felder
+                }
+            });
             alert("Geräte wurden gespeichert!");
+        }
+
+        function searchDevice() {
+            const searchValue = document.getElementById("search").value.toLowerCase();
+            const result = deviceData.filter(device => device.col1.toLowerCase().includes(searchValue));
+            displaySearchResults(result);
+        }
+
+        function displaySearchResults(results) {
+            let output = "";
+            results.forEach(device => {
+                output += `<div><strong>${device.col1}</strong>: ${device.col2}, ${device.col3}, ${device.col4}, ${device.col5}, ${device.col6}, ${device.col7}</div>`;
+            });
+            document.getElementById("searchResult").innerHTML = output;
         }
     </script>
 </body>
