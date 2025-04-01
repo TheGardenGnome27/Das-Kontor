@@ -31,16 +31,48 @@
     <input type="password" id="password" placeholder="Passwort eingeben" />
     <button onclick="checkPassword()">Anmelden</button>
 
-<script>
-    function checkPassword() {
-        var password = document.getElementById("password").value;
-        if (password === "Eibenweg") {
-            // Verwende "location.assign" für die Weiterleitung
-            location.assign("https://thegardengnome27.github.io/Das-Kontor/hub.html");
-        } else {
-            alert("Falsches Passwort!");
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Garten Sharing - Start</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            text-align: center;
+            font-family: Arial, sans-serif;
         }
-    }
-</script>
+        input[type="password"] {
+            padding: 10px;
+            margin: 20px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: white;
+            color: black;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Willkommen im Garten Sharing Hub</h1>
+    <p>Gib das Passwort ein, um fortzufahren:</p>
+    <input type="password" id="password" placeholder="Passwort eingeben" />
+    <button onclick="checkPassword()">Anmelden</button>
+
+    <script>
+        function checkPassword() {
+            var password = document.getElementById("password").value;
+            if (password === "Eibenweg") {
+                window.location.href = "hub.html";
+            } else {
+                alert("Falsches Passwort!");
+            }
+        }
+    </script>
 </body>
 </html>
