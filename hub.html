@@ -4,10 +4,12 @@
     <meta charset="UTF-8">
     <title>Garten Sharing Hub</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap');
+
         body {
             background-color: white;
             color: #1E90FF;
-            font-family: 'Comic Sans MS', cursive, sans-serif;
+            font-family: 'Nunito', sans-serif;
             display: flex;
             justify-content: space-around;
             align-items: center;
@@ -31,7 +33,7 @@
             border: 2px solid #1E90FF;
             border-radius: 8px;
             cursor: pointer;
-            font-family: 'Comic Sans MS', cursive, sans-serif;
+            font-family: 'Nunito', sans-serif;
         }
 
         button:hover {
@@ -62,7 +64,16 @@
             background-color: #f0f8ff;
         }
 
-        .update-button, .have-button {
+        input[type="text"] {
+            width: 90%;
+            padding: 5px;
+            font-size: 16px;
+            border-radius: 4px;
+            border: 1px solid #1E90FF;
+            margin: 2px;
+        }
+
+        .update-button, .have-button, .save-button {
             background-color: #1E90FF;
             color: white;
             border-radius: 15px;
@@ -84,7 +95,7 @@
     <div class="button-container">
         <button class="have-button" onclick="toggleTable()">Ich habe...</button>
         <div id="deviceTable">
-            <table>
+            <table id="deviceList">
                 <tr>
                     <th>1. Gerätname</th>
                     <th>2. Modell</th>
@@ -103,16 +114,14 @@
                     <td>+49 987 654 321</td>
                     <td>Katrin</td>
                 </tr>
-                <tr>
-                    <td>Heckenschere</td>
-                    <td>Stihl HS 45</td>
-                    <td>Eibenweg 7</td>
-                    <td>garten@web.de</td>
-                    <td>+49 111 222 333</td>
-                    <td>+49 444 555 666</td>
-                    <td>Hans</td>
-                </tr>
+                <!-- Leere Zeilen für Nutzereingaben -->
+                <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+                <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+                <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+                <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+                <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
             </table>
+            <button class="save-button" onclick="saveDevices()">Speichern</button>
         </div>
     </div>
 
@@ -123,11 +132,11 @@
     <script>
         function toggleTable() {
             var table = document.getElementById("deviceTable");
-            if (table.style.display === "none") {
-                table.style.display = "block";
-            } else {
-                table.style.display = "none";
-            }
+            table.style.display = (table.style.display === "none") ? "block" : "none";
+        }
+
+        function saveDevices() {
+            alert("Geräte wurden gespeichert!");
         }
     </script>
 </body>
